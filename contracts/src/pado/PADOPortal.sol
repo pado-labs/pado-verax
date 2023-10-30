@@ -4,10 +4,15 @@ pragma solidity 0.8.21;
 import { EIP712 } from "openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol";
 import { ECDSA } from "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
-import { AbstractPortal } from "../interface/AbstractPortal.sol";
+import { IERC165 } from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
+import { IPortal } from "../interface/IPortal.sol";
 import { AttestationPayload } from "../types/Structs.sol";
+import { ModuleRegistry } from "../ModuleRegistry.sol";
+import { AttestationRegistry } from "../AttestationRegistry.sol";
+import { IRouter } from "../interface/IRouter.sol";
 
-contract PADOPortal is AbstractPortal, EIP712, Ownable {
+
+contract PADOPortal is IPortal, EIP712, Ownable {
     struct AttestationRequestData {
         address recipient;
         uint64 expirationTime;
@@ -39,6 +44,10 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
     error NoBulkRevocation();
     error WrongMethod();
 
+    address[] private _modules;
+    ModuleRegistry public moduleRegistry;
+    AttestationRegistry public attestationRegistry;
+    IRouter public router;
     uint64 constant NO_EXPIRATION_TIME = 0;
     string public constant VERSION = "0.1";
     // keccak256("Attest(bytes32 schema,address recipient,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data,uint64 deadline)").
@@ -48,7 +57,11 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
     uint256 private _fee;
     address payable private _receiveAddr;
 
-    constructor(string memory name, uint256 feeParams, address payable recvAddr,address[] memory modules, address router) EIP712(name, VERSION) AbstractPortal(modules,router) {
+    constructor(string memory name, uint256 feeParams, address payable recvAddr,address[] memory modules, address routerParam) EIP712(name, VERSION) {
+        _modules = modules;
+        router = IRouter(routerParam);
+        attestationRegistry = AttestationRegistry(router.getAttestationRegistry());
+        moduleRegistry = ModuleRegistry(router.getModuleRegistry());
         _name = name;
         _fee = feeParams;
         _receiveAddr = recvAddr;
@@ -63,7 +76,7 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
             require(success, 'transfer failed');
         }
 
-        bytes[] memory validationPayload = new bytes[](0);
+        bytes[] memory validationPayloads = new bytes[](0);
         AttestationPayload memory attestationPayload = AttestationPayload(
             attestationRequest.schema,
             attestationRequest.data.expirationTime,
@@ -71,7 +84,8 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
             attestationRequest.data.data
         );
 
-        super.attest(attestationPayload, validationPayload);
+        moduleRegistry.runModules(_modules, attestationPayload, validationPayloads, msg.value);
+        attestationRegistry.attest(attestationPayload, getAttester());
     }
 
     function bulkAttest(DelegatedProxyAttestationRequest[] memory attestationsRequests) external  payable{
@@ -98,9 +112,23 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
             validationPayloads[i] = new bytes[](0);
         }
 
-        super.bulkAttest(attestationsPayloads, validationPayloads);
+        moduleRegistry.bulkRunModules(_modules, attestationsPayloads, validationPayloads);
+        attestationRegistry.bulkAttest(attestationsPayloads, getAttester());
     }
 
+    function supportsInterface(bytes4 interfaceID) public pure virtual override returns (bool) {
+        return
+        interfaceID == type(IPortal).interfaceId ||
+        interfaceID == type(IERC165).interfaceId;
+    }
+
+    function getModules() external view returns (address[] memory) {
+        return _modules;
+    }
+
+    function getAttester() public view virtual returns (address) {
+        return owner();
+    }
 
     function getName() external view returns (string memory) {
         return _name;
@@ -160,6 +188,4 @@ contract PADOPortal is AbstractPortal, EIP712, Ownable {
     function _time() internal view virtual returns (uint64) {
         return uint64(block.timestamp);
     }
-
-    function withdraw(address payable to, uint256 amount) external override onlyOwner {}
 }
