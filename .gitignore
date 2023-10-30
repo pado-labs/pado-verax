@@ -1,0 +1,36 @@
+# Compiler files
+cache/
+out/
+
+# Dotenv file
+.env
+
+# Modules
+node_modules
+
+# IDE
+.idea
+.vscode
+
+# Coverage
+lcov.info
+coverage
+
+# Hardhat
+cache_hardhat
+artifacts
+typechain-types
+
+# Subgraph
+build
+generated
+subgraph.yaml
+.bin
+.latest.json
+.docker
+
+# SDK
+lib
+
+# Misc
+.DS_Store

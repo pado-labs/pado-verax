@@ -1,0 +1,41 @@
+{
+  "name": "linea-attestation-registry",
+  "version": "0.0.1",
+  "description": "Core smart contracts to read and write attestations on Linea",
+  "keywords": [
+    "linea-attestation-registry",
+    "blockchain",
+    "attestation",
+    "ethereum",
+    "foundry",
+    "smart-contracts",
+    "solidity"
+  ],
+  "repository": "github.com/Consensys/linea-attestation-registry",
+  "license": "MIT",
+  "author": "Consensys",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "prettier:check": "prettier --check \"**/*.{json,md,svg,yml,sol,ts}\"",
+    "prettier:write": "prettier --write \"**/*.{json,md,svg,yml,sol,ts}\""
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.8",
+    "typescript": "^5.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "ejs@<3.1.7": ">=3.1.7",
+      "tough-cookie@<4.1.3": ">=4.1.3",
+      "semver@>=7.0.0 <7.5.2": ">=7.5.2"
+    }
+  }
+}
