@@ -5,7 +5,7 @@ async function main() {
 
     const [deployer] = await hre.ethers.getSigners();
     const attestationRegistryContractAddress = "0x0fF4610cEdEE2009DDa83100610a10b3b5838219"
-    const attestationId = "0x0000000000000000000000000000000000000000000000000000000000000003"
+    const attestationId = "0x0000000000000000000000000000000000000000000000000000000000000004"
     console.log(
         "Deploying contracts with the account:",
         deployer.address
