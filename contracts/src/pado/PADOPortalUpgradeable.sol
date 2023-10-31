@@ -100,6 +100,39 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         _padoAttestations[attestationRequest.data.recipient][attestationRequest.schema].push(attestationId);
     }
 
+    function bulkAttest(DelegatedProxyAttestationRequest[] memory attestationsRequests) external payable {
+        for (uint256 i = 0; i < attestationsRequests.length; i++) {
+            _verifyAttest(attestationsRequests[i]);
+        }
+
+        if (_fee > 0) {
+            require(msg.value >= _fee * attestationsRequests.length, 'less than fee');
+            (bool success, ) = _receiveAddr.call{value: msg.value}(new bytes(0));
+            require(success, 'transfer failed');
+        }
+
+        AttestationPayload[] memory attestationsPayloads = new AttestationPayload[](attestationsRequests.length);
+        bytes[][] memory validationPayloads = new bytes[][](attestationsRequests.length);
+        for (uint256 i = 0; i < attestationsRequests.length; i++) {
+            attestationsPayloads[i] = AttestationPayload(
+                attestationsRequests[i].schema,
+                attestationsRequests[i].data.expirationTime,
+                abi.encodePacked(attestationsRequests[i].data.recipient),
+                attestationsRequests[i].data.data
+            );
+            validationPayloads[i] = new bytes[](0);
+        }
+
+        moduleRegistry.bulkRunModules(_modules, attestationsPayloads, validationPayloads);
+        attestationRegistry.bulkAttest(attestationsPayloads, getAttester());
+
+        uint32 attestationIdCounter = attestationRegistry.getAttestationIdCounter();
+        for (uint256 i = 0; i < attestationsRequests.length; i++) {
+            bytes32 attestationId = bytes32(abi.encode(attestationIdCounter - attestationsRequests.length + 1 + i));
+            _padoAttestations[attestationsRequests[i].data.recipient][attestationsRequests[i].schema].push(attestationId);
+        }
+    }
+
     function supportsInterface(bytes4 interfaceID) public pure virtual override returns (bool) {
         return
         interfaceID == type(IPortal).interfaceId ||
