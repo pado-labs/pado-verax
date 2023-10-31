@@ -137,7 +137,23 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     }
 
     function checkHumanity(address userAddress) public view returns (bool) {
-        return true;
+        return false;
+    }
+
+    function checkBinanceKyc(address userAddress) public view returns (bool) {
+        return false;
+    }
+
+    function checkBinanceOwner(address userAddress) public view returns (bool) {
+        return false;
+    }
+
+    function checkTwitterOwner(address userAddress) public view returns (bool) {
+        return false;
+    }
+
+    function checkCommon(address userAddress/*, params array*/ ) public view returns (bool) {
+        return false;
     }
 
     function _verifyAttest(DelegatedProxyAttestationRequest memory request) internal view {
