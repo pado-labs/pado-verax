@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
-import { EIP712 } from "openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol";
-import { ECDSA } from "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
-import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
+import { EIP712Upgradeable } from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol";
+import { ECDSAUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/ECDSAUpgradeable.sol";
+import { OwnableUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import { IERC165 } from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
 import { IPortal } from "../interface/IPortal.sol";
 import { AttestationPayload } from "../types/Structs.sol";
@@ -11,7 +11,7 @@ import { ModuleRegistry } from "../ModuleRegistry.sol";
 import { AttestationRegistry } from "../AttestationRegistry.sol";
 import { IRouter } from "../interface/IRouter.sol";
 
-contract PADOPortal is IPortal, EIP712, Ownable {
+contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable {
     struct AttestationRequestData {
         address recipient;
         uint64 expirationTime;
@@ -57,14 +57,22 @@ contract PADOPortal is IPortal, EIP712, Ownable {
     address payable private _receiveAddr;
     mapping(address => mapping(bytes32 schemaid => bytes32[])) private _padoAttestations;
 
-    constructor(string memory name, uint256 feeParams, address payable recvAddr,address[] memory modules, address routerParam) EIP712(name, VERSION) {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(string memory name, uint256 feeParams, address payable recvAddr, 
+    address[] memory modules, address routerParam) external initializer {
+        __EIP712_init(name, VERSION);
+        __Ownable_init();
+        _name = name;
+        _fee = feeParams;
+        _receiveAddr = recvAddr;
         _modules = modules;
         router = IRouter(routerParam);
         attestationRegistry = AttestationRegistry(router.getAttestationRegistry());
         moduleRegistry = ModuleRegistry(router.getModuleRegistry());
-        _name = name;
-        _fee = feeParams;
-        _receiveAddr = recvAddr;
     }
 
     function attest(DelegatedProxyAttestationRequest memory attestationRequest) external payable {
@@ -156,7 +164,7 @@ contract PADOPortal is IPortal, EIP712, Ownable {
             )
         );
 
-        if (ECDSA.recover(digest, signature.v, signature.r, signature.s) != request.attester) {
+        if (ECDSAUpgradeable.recover(digest, signature.v, signature.r, signature.s) != request.attester) {
             revert InvalidSignature();
         }
     }

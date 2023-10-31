@@ -53,10 +53,12 @@
     "upgrade:all:goerli:force": "npx hardhat run --network linea-goerli script/upgrade/forceUpgradeEverything.ts",
     "upgrade:all:scroll-sepolia": "npx hardhat run --network scroll-sepolia script/upgrade/upgradeEverything.ts",
     "upgrade:all:scroll-sepolia:force": "npx hardhat run --network scroll-sepolia script/upgrade/forceUpgradeEverything.ts",
-    "deploy:padoportal:upperchain": "npx hardhat run --network scroll-sepolia script/pado/upperchain.js",
-    "deploy:padoportal:getAttestation": "npx hardhat run --network scroll-sepolia script/pado/getAttestation.js",
-    "deploy:padoportal:deployAndRegisterPadoPortal": "npx hardhat run --network scroll-sepolia script/pado/deployAndRegisterPadoPortal.js",
-    "deploy:padoportal:createSchema": "npx hardhat run --network scroll-sepolia script/pado/createSchema.js"
+    "deploy:padoportal:scroll-sepolia:upperchain": "npx hardhat run --network scroll-sepolia script/pado/upperchain.js",
+    "deploy:padoportal:scroll-sepolia:getAttestation": "npx hardhat run --network scroll-sepolia script/pado/getAttestation.js",
+    "deploy:padoportal:scroll-sepolia:deployAndRegisterPadoPortal": "npx hardhat run --network scroll-sepolia script/pado/deployAndRegisterPadoPortal.js",
+    "deploy:padoportal:scroll-sepolia:createSchema": "npx hardhat run --network scroll-sepolia script/pado/createSchema.js",
+    "deploy:padoportal:linea-goerli:deployAndRegisterPadoPortal": "npx hardhat run --network linea-goerli script/pado/deployAndRegisterPadoPortal.js",
+    "deploy:padoportal:deployAndRegisterPadoPortal": "npx hardhat run --network linea script/pado/deployAndRegisterPadoPortal.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
