@@ -136,6 +136,10 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return true;
     }
 
+    function checkHumanity(address userAddress) public view returns (bool) {
+        return true;
+    }
+
     function _verifyAttest(DelegatedProxyAttestationRequest memory request) internal view {
         if (request.attester != owner()) {
             revert AccessDenied();
