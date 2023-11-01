@@ -84,20 +84,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
             require(success, 'transfer failed');
         }
 
-        bytes[] memory validationPayloads = new bytes[](0);
-        AttestationPayload memory attestationPayload = AttestationPayload(
-            attestationRequest.schema,
-            attestationRequest.data.expirationTime,
-            abi.encodePacked(attestationRequest.data.recipient),
-            attestationRequest.data.data
-        );
-
-        moduleRegistry.runModules(_modules, attestationPayload, validationPayloads, msg.value);
-        attestationRegistry.attest(attestationPayload, getAttester());
-
-        uint32 attestationIdCounter = attestationRegistry.getAttestationIdCounter();
-        bytes32 attestationId = bytes32(abi.encode(attestationIdCounter));
-        _padoAttestations[attestationRequest.data.recipient][attestationRequest.schema].push(attestationId);
+        _attest(attestationRequest);
     }
 
     function bulkAttest(DelegatedProxyAttestationRequest[] memory attestationsRequests) external payable {
@@ -111,25 +98,8 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
             require(success, 'transfer failed');
         }
 
-        AttestationPayload[] memory attestationsPayloads = new AttestationPayload[](attestationsRequests.length);
-        bytes[][] memory validationPayloads = new bytes[][](attestationsRequests.length);
         for (uint256 i = 0; i < attestationsRequests.length; i++) {
-            attestationsPayloads[i] = AttestationPayload(
-                attestationsRequests[i].schema,
-                attestationsRequests[i].data.expirationTime,
-                abi.encodePacked(attestationsRequests[i].data.recipient),
-                attestationsRequests[i].data.data
-            );
-            validationPayloads[i] = new bytes[](0);
-        }
-
-        moduleRegistry.bulkRunModules(_modules, attestationsPayloads, validationPayloads);
-        attestationRegistry.bulkAttest(attestationsPayloads, getAttester());
-
-        uint32 attestationIdCounter = attestationRegistry.getAttestationIdCounter();
-        for (uint256 i = 0; i < attestationsRequests.length; i++) {
-            bytes32 attestationId = bytes32(abi.encode(attestationIdCounter - attestationsRequests.length + 1 + i));
-            _padoAttestations[attestationsRequests[i].data.recipient][attestationsRequests[i].schema].push(attestationId);
+            _attest(attestationsRequests[i]);
         }
     }
 
@@ -139,11 +109,11 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         interfaceID == type(IERC165).interfaceId;
     }
 
-    function getModules() external view returns (address[] memory) {
+    function getModules() external view override returns (address[] memory) {
         return _modules;
     }
 
-    function getAttester() public view virtual returns (address) {
+    function getAttester() public view override returns (address) {
         return owner();
     }
 
@@ -169,7 +139,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return true;
     }
 
-    function checkHumanity(address userAddress) public view returns (bool) {
+    /*function checkHumanity(address userAddress) public view returns (bool) {
         return false;
     }
 
@@ -185,8 +155,29 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return false;
     }
 
-    function checkCommon(address userAddress/*, params array*/ ) public view returns (bool) {
+    function checkCommon(address userAddress) public view returns (bool) {
         return false;
+    }*/
+
+    function getPadoAttestations(address user, bytes32 schema) external view returns(bytes32[] memory) {
+        return _padoAttestations[user][schema];
+    }
+
+    function _attest(DelegatedProxyAttestationRequest memory attestationRequest) internal {
+        bytes[] memory validationPayloads = new bytes[](0);
+        AttestationPayload memory attestationPayload = AttestationPayload(
+            attestationRequest.schema,
+            attestationRequest.data.expirationTime,
+            abi.encodePacked(attestationRequest.data.recipient),
+            attestationRequest.data.data
+        );
+
+        moduleRegistry.runModules(_modules, attestationPayload, validationPayloads, msg.value);
+        attestationRegistry.attest(attestationPayload, getAttester());
+
+        uint32 attestationIdCounter = attestationRegistry.getAttestationIdCounter();
+        bytes32 attestationId = bytes32(abi.encode(attestationIdCounter));
+        _padoAttestations[attestationRequest.data.recipient][attestationRequest.schema].push(attestationId);
     }
 
     function _verifyAttest(DelegatedProxyAttestationRequest memory request) internal view {
@@ -224,9 +215,5 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
 
     function _time() internal view virtual returns (uint64) {
         return uint64(block.timestamp);
-    }
-
-    function getPadoAttestations(address user, bytes32 schema) external view returns(bytes32[] memory) {
-        return _padoAttestations[user][schema];
     }
 }
