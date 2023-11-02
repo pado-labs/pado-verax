@@ -175,13 +175,25 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
 
     /*function checkHumanity(address userAddress) public view returns (bool) {
         return false;
-    }
+    }*/
 
+    /**
+     * @notice Return true if the user address have binance kyc attestations.
+     */
     function checkBinanceKyc(address userAddress) public view returns (bool) {
+        bytes32[] memory attestationIds =  _padoAttestations[userAddress][_webSchemaId];
+        for (uint256 i = 0; i < attestationIds.length; i++) {
+            Attestation memory ats = attestationRegistry.getAttestation(attestationIds[i]);
+            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string,string,string,string,bytes32,bool,uint64,bytes32));
+            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "binance")
+            && _compareStrings(Content, "KYC Level") && _compareStrings(Condition, ">=2") && Result) {
+                return true;
+            }
+        }
         return false;
     }
 
-    function checkBinanceOwner(address userAddress) public view returns (bool) {
+    /*function checkBinanceOwner(address userAddress) public view returns (bool) {
         return false;
     }
 
