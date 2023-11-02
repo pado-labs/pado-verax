@@ -60,7 +60,8 @@
     "deploy:padoportal:linea-goerli:deployAndRegisterPadoPortal": "npx hardhat run --network linea-goerli script/pado/deployAndRegisterPadoPortal.js",
     "upgrade:padoportal:linea-goerli:upgradePadoPortal": "npx hardhat run --network linea-goerli script/pado/upgradePadoPortal.js",
     "deploy:padoportal:deployAndRegisterPadoPortal": "npx hardhat run --network linea script/pado/deployAndRegisterPadoPortal.js",
-    "upgrade:padoportal:upgradePadoPortal": "npx hardhat run --network linea script/pado/upgradePadoPortal.js"
+    "upgrade:padoportal:upgradePadoPortal": "npx hardhat run --network linea script/pado/upgradePadoPortal.js",
+    "test:padoportal:linea-goerli": "npx hardhat run --network linea-goerli script/pado/test.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",

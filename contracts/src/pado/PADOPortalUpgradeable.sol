@@ -6,7 +6,7 @@ import { ECDSAUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/u
 import { OwnableUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import { IERC165 } from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
 import { IPortal } from "../interface/IPortal.sol";
-import { AttestationPayload } from "../types/Structs.sol";
+import { AttestationPayload, Attestation } from "../types/Structs.sol";
 import { ModuleRegistry } from "../ModuleRegistry.sol";
 import { AttestationRegistry } from "../AttestationRegistry.sol";
 import { IRouter } from "../interface/IRouter.sol";
@@ -56,6 +56,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     uint256 private _fee;
     address payable private _receiveAddr;
     mapping(address => mapping(bytes32 schemaid => bytes32[])) private _padoAttestations;
+    bytes32 private _webSchemaId;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -63,7 +64,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     }
 
     function initialize(string memory name, uint256 feeParams, address payable recvAddr, 
-    address[] memory modules, address routerParam) external initializer {
+    address[] memory modules, address routerParam, bytes32 webSchemaId) external initializer {
         __EIP712_init(name, VERSION);
         __Ownable_init();
         _name = name;
@@ -73,6 +74,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         router = IRouter(routerParam);
         attestationRegistry = AttestationRegistry(router.getAttestationRegistry());
         moduleRegistry = ModuleRegistry(router.getModuleRegistry());
+        _webSchemaId = webSchemaId;
     }
 
     function attest(DelegatedProxyAttestationRequest memory attestationRequest) external payable {
@@ -125,7 +127,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return _fee;
     }
 
-    function setFee(uint256 feeParams) public onlyOwner returns (bool){
+    function setFee(uint256 feeParams) public onlyOwner returns (bool) {
         _fee = feeParams;
         return true;
     }
@@ -137,6 +139,38 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     function setReceiveAddr(address payable recvAddr) public onlyOwner returns (bool) {
         _receiveAddr = recvAddr;
         return true;
+    }
+
+    function setWebSchemaId(bytes32 webSchemaId) public onlyOwner returns (bool) {
+        _webSchemaId = webSchemaId;
+        return true;
+    }
+
+    function getWebSchemaId() public view returns(bytes32) {
+        return _webSchemaId;
+    }
+
+    // Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
+    function checkDeFiVoyageHumanity(address userAddress) public view returns (bool) {
+        bytes32[] memory uids = _padoAttestations[userAddress][_webSchemaId];
+        uint8 resultBinanceCount = 0;
+        uint8 resultTwitterCount = 0;
+        for (uint256 i = 0; i < uids.length; i++) {
+            Attestation memory ats = attestationRegistry.getAttestation(uids[i]);
+            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string,string,string,string,bytes32,bool,uint64,bytes32));
+            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "binance")
+            && _compareStrings(Content, "KYC Level(DeFiVoyage)") && _compareStrings(Condition, ">=2") && Result) {
+                resultBinanceCount++;
+            }
+            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "twitter")
+            && _compareStrings(Content, "X Account(DeFiVoyage)") && _compareStrings(Condition, "Owned") && Result) {
+                resultTwitterCount++;
+            }
+            if (resultBinanceCount >= 1 && resultTwitterCount >= 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*function checkHumanity(address userAddress) public view returns (bool) {
@@ -215,5 +249,9 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
 
     function _time() internal view virtual returns (uint64) {
         return uint64(block.timestamp);
+    }
+
+    function _compareStrings(string memory a, string memory b) internal pure returns (bool) {
+        return (keccak256(bytes(a)) == keccak256(bytes(b)));
     }
 }
