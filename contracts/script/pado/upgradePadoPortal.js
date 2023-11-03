@@ -7,10 +7,10 @@ async function main() {
         deployer.address
     );
 
-    const padoPortalAddress = "0xfF1c83F2EcDC47755b75c9ff0CD40b26dBc1A41F"; // linea testnet
+    const padoPortalAddress = "0x515b9dd670176e68b9623926d12082d6f37786f4"; // linea testnet
     //const padoPortalAddress = ""; // linea mainnet
     console.log("Upgrading PadoPortal, with proxy at", padoPortalAddress);
-    const padoPortal = await ethers.getContractFactory("PADOPortalUpgradeable");
+    const padoPortal = await hre.ethers.getContractFactory("PADOPortalUpgradeable");
     await hre.upgrades.upgradeProxy(padoPortalAddress, padoPortal);
     console.log(`PadoPortal successfully upgraded!`);
     console.log(`PadoPortal Proxy is at ${padoPortalAddress}`);

@@ -181,29 +181,29 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
      * @notice Return true if the user address have binance kyc attestations.
      */
     function checkBinanceKyc(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "KYC Level", ">=2");
+    }
+
+    /*function checkBinanceOwner(address userAddress) public view returns (bool) {
+        return false;
+    }*/
+
+    function checkTwitterOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "twitter", "X Account", "Owned");
+    }
+
+    function checkCommon(address userAddress, string memory proofType, string memory source, string memory content, string memory condition) public view returns (bool) {
         bytes32[] memory attestationIds =  _padoAttestations[userAddress][_webSchemaId];
         for (uint256 i = 0; i < attestationIds.length; i++) {
             Attestation memory ats = attestationRegistry.getAttestation(attestationIds[i]);
             (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string,string,string,string,bytes32,bool,uint64,bytes32));
-            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "binance")
-            && _compareStrings(Content, "KYC Level") && _compareStrings(Condition, ">=2") && Result) {
+            if (_compareStrings(ProofType, proofType) && _compareStrings(Source, source)
+            && _compareStrings(Content, content) && _compareStrings(Condition, condition) && Result) {
                 return true;
             }
         }
         return false;
     }
-
-    /*function checkBinanceOwner(address userAddress) public view returns (bool) {
-        return false;
-    }
-
-    function checkTwitterOwner(address userAddress) public view returns (bool) {
-        return false;
-    }
-
-    function checkCommon(address userAddress) public view returns (bool) {
-        return false;
-    }*/
 
     function getPadoAttestations(address user, bytes32 schema) external view returns(bytes32[] memory) {
         return _padoAttestations[user][schema];

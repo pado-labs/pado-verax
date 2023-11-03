@@ -14,12 +14,21 @@ async function main() {
     const res = await padoContract.getPadoAttestations(userAddress, schemaId);
     console.log("res=", res);
 
-    const AttestationRegistry = "0xC765F28096F6121C2F2b82D35A4346280164428b"; // linea testnet
+    let resWebScheme = await padoContract.getWebSchemaId();
+    console.log("resWebScheme=", resWebScheme);
+    /*const resSet = await padoContract.setWebSchemaId(schemaId);
+    console.log("resSet=", resSet);*/
+    let resCheck = await padoContract.checkBinanceKyc(userAddress);
+    console.log("resCheck=", resCheck);
+    let resCheck1 = await padoContract.checkDeFiVoyageHumanity(userAddress);
+    console.log("resCheck1=", resCheck1);
+
+    /*const AttestationRegistry = "0xC765F28096F6121C2F2b82D35A4346280164428b"; // linea testnet
     //const AttestationRegistry = ""; // linea mainnet
     const contract = await hre.ethers.getContractAt("AttestationRegistry", AttestationRegistry);
     const astId = "0x0000000000000000000000000000000000000000000000000000000000001236";
     const ats = await contract.getAttestation(astId);
-    console.log("ats=", ats);
+    console.log("ats=", ats);*/
 }
 
 // We recommend this pattern to be able to use async/await everywhere
