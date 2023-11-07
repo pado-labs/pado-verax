@@ -4,7 +4,7 @@ async function main() {
     console.log("version is:", hre.ethers.version)
 
     const [deployer] = await hre.ethers.getSigners();
-    const commonSchemaStr = "string proofType2, string source, string content, string condition, bytes32 sourceUseridHash, bool result, uint64 timestamp, bytes32 useridHash";
+    const commonSchemaStr = "string ProofType,string Source,string Content,string Condition,bytes32 SourceUserIdHash,bool Result,uint64 Timestamp,bytes32 UserIdHash";
     const assetProofSchemaStr = "string source,bytes32 sourceUseridHash,bytes32 authUseridHash,address receipt,uint64 getDataTime,uint64 baseValue,bool balanceGreaterThanBaseValue";
     const tokenHoldingSchemaStr = "string source,bytes32 sourceUseridHash,bytes32 authUseridHash,address recipient,uint64 getDataTime,string asset,string baseAmount,bool balanceGreaterThanBaseAmount";
     const identityProofSchemaStr = "string source,string credentialType,bytes32 authUseridHash,address recipient,uint64 timestamp,bool result";
