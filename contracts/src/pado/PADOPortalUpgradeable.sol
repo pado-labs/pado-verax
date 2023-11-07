@@ -162,8 +162,8 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
             && _compareStrings(Content, "KYC Level(DeFiVoyage)") && _compareStrings(Condition, ">=2") && Result) {
                 resultBinanceCount++;
             }
-            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "twitter")
-            && _compareStrings(Content, "X Account(DeFiVoyage)") && _compareStrings(Condition, "Owned") && Result) {
+            if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "x")
+            && _compareStrings(Content, "Account Ownership(DeFiVoyage)") && _compareStrings(Condition, "Verified") && Result) {
                 resultTwitterCount++;
             }
             if (resultBinanceCount >= 1 && resultTwitterCount >= 1) {
@@ -189,7 +189,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     }*/
 
     function checkTwitterOwner(address userAddress) public view returns (bool) {
-        return checkCommon(userAddress, "Identity", "twitter", "X Account", "Owned");
+        return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
     }
 
     function checkCommon(address userAddress, string memory proofType, string memory source, string memory content, string memory condition) public view returns (bool) {
