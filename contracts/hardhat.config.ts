@@ -36,6 +36,10 @@ const config: HardhatUserConfig = {
       url: "https://sepolia-rpc.scroll.io/" || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    "scroll": {
+      url: "https://rpc.scroll.io/" || "",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   paths: {
     sources: "./src",

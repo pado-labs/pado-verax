@@ -6,7 +6,13 @@ dotenv.config({ path: "../.env" });
 async function main() {
   console.log(`START SCRIPT`);
 
-  const easRegistryAddress = process.env.EAS_REGISTRY_ADDRESS;
+  //const easRegistryAddress = process.env.EAS_REGISTRY_ADDRESS;
+
+  const [deployer] = await ethers.getSigners();
+  console.log(
+    "Deploying contracts with the account:",
+    deployer.address
+  );
 
   console.log("Deploying Router...");
   const Router = await ethers.getContractFactory("Router");
@@ -15,9 +21,9 @@ async function main() {
   const routerProxyAddress = await router.getAddress();
   const routerImplementationAddress = await upgrades.erc1967.getImplementationAddress(routerProxyAddress);
 
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: routerProxyAddress,
-  });
+  });*/
 
   console.log(`Router successfully deployed and verified!`);
   console.log(`Proxy is at ${routerProxyAddress}`);
@@ -34,9 +40,9 @@ async function main() {
     attestationRegistryProxyAddress,
   );
 
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: attestationRegistryProxyAddress,
-  });
+  });*/
 
   console.log(`AttestationRegistry successfully deployed and verified!`);
   console.log(`Proxy is at ${attestationRegistryProxyAddress}`);
@@ -52,10 +58,9 @@ async function main() {
   const moduleRegistryImplementationAddress = await upgrades.erc1967.getImplementationAddress(
     moduleRegistryProxyAddress,
   );
-
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: moduleRegistryProxyAddress,
-  });
+  });*/
 
   console.log(`ModuleRegistry successfully deployed and verified!`);
   console.log(`Proxy is at ${moduleRegistryProxyAddress}`);
@@ -72,9 +77,9 @@ async function main() {
     portalRegistryProxyAddress,
   );
 
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: portalRegistryProxyAddress,
-  });
+  });*/
 
   console.log(`PortalRegistry successfully deployed and verified!`);
   console.log(`Proxy is at ${portalRegistryProxyAddress}`);
@@ -91,9 +96,9 @@ async function main() {
     schemaRegistryProxyAddress,
   );
 
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: schemaRegistryProxyAddress,
-  });
+  });*/
 
   console.log(`SchemaRegistry successfully deployed and verified!`);
   console.log(`Proxy is at ${schemaRegistryProxyAddress}`);
@@ -110,9 +115,9 @@ async function main() {
     attestationReaderProxyAddress,
   );
 
-  await run("verify:verify", {
+  /*await run("verify:verify", {
     address: attestationReaderProxyAddress,
-  });
+  });*/
 
   console.log(`AttestationReader successfully deployed and verified!`);
   console.log(`Proxy is at ${attestationReaderProxyAddress}`);
@@ -155,9 +160,9 @@ async function main() {
   await attestationReader.updateRouter(routerProxyAddress);
   console.log("AttestationReader updated with router address!");
 
-  console.log("Updating AttestationReader with the EAS Registry address...");
-  await attestationReader.updateEASRegistryAddress(easRegistryAddress);
-  console.log("AttestationReader updated with EAS registry address!");
+  //console.log("Updating AttestationReader with the EAS Registry address...");
+  //await attestationReader.updateEASRegistryAddress(easRegistryAddress);
+  //console.log("AttestationReader updated with EAS registry address!");
 
   console.log(`\n----\n`);
 
