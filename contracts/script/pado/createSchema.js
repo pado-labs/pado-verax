@@ -13,6 +13,7 @@ async function main() {
     const identityProofSchemaPolygonStr = "string source,string credentialType,bytes32 authUseridHash,string issuerDID,string recipientDID,address recipient,uint64 timestamp,bool result";
 
     const schemaMap = {
+        commonSchemaStr: commonSchemaStr,
         assetProof: assetProofSchemaStr,
         assetProofPolygon: assetProofSchemaPolygonStr,
         tokenHolding: tokenHoldingSchemaStr,
