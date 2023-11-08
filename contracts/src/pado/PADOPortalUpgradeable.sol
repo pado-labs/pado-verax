@@ -184,9 +184,18 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return checkCommon(userAddress, "Identity", "binance", "KYC Level", ">=2");
     }
 
-    /*function checkBinanceOwner(address userAddress) public view returns (bool) {
-        return false;
-    }*/
+//    function checkBinanceOwner(address userAddress) public view returns (bool) {
+//        return false;
+//    }
+
+    function checkScrollBinanceOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "Account Ownership(ScrollLaunchCampaign)", "Verified");
+    }
+
+
+    function checkScrollTwitterOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "x", "Account Ownership(ScrollLaunchCampaign)", "Verified");
+    }
 
     function checkTwitterOwner(address userAddress) public view returns (bool) {
         return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
