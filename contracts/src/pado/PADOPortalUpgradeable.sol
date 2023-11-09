@@ -150,6 +150,21 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return _webSchemaId;
     }
 
+    /**
+     * @notice Return true if the user address have binance kyc attestations.
+     */
+    function checkBinanceKyc(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "KYC Level", ">=2");
+    }
+
+    function checkBinanceOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "Account Ownership", "Verified");
+    }
+
+    function checkTwitterOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
+    }
+
     // Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
     function checkDeFiVoyageHumanity(address userAddress) public view returns (bool) {
         bytes32[] memory uids = _padoAttestations[userAddress][_webSchemaId];
@@ -173,32 +188,24 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return false;
     }
 
-    /*function checkHumanity(address userAddress) public view returns (bool) {
-        return false;
-    }*/
-
-    /**
-     * @notice Return true if the user address have binance kyc attestations.
-     */
-    function checkBinanceKyc(address userAddress) public view returns (bool) {
-        return checkCommon(userAddress, "Identity", "binance", "KYC Level", ">=2");
+    function checkDeFiVoyageBinanceKyc(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "KYC Level(DeFiVoyage)", ">=2");
     }
 
-//    function checkBinanceOwner(address userAddress) public view returns (bool) {
-//        return false;
-//    }
+    function checkDeFiVoyageBinanceOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "binance", "Account Ownership(DeFiVoyage)", "Verified");
+    }
+
+    function checkDeFiVoyageTwitterOwner(address userAddress) public view returns (bool) {
+        return checkCommon(userAddress, "Identity", "x", "Account Ownership(DeFiVoyage)", "Verified");
+    }
 
     function checkScrollBinanceOwner(address userAddress) public view returns (bool) {
         return checkCommon(userAddress, "Identity", "binance", "Account Ownership(ScrollLaunchCampaign)", "Verified");
     }
 
-
     function checkScrollTwitterOwner(address userAddress) public view returns (bool) {
         return checkCommon(userAddress, "Identity", "x", "Account Ownership(ScrollLaunchCampaign)", "Verified");
-    }
-
-    function checkTwitterOwner(address userAddress) public view returns (bool) {
-        return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
     }
 
     function checkCommon(address userAddress, string memory proofType, string memory source, string memory content, string memory condition) public view returns (bool) {

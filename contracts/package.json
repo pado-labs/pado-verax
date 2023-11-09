@@ -65,9 +65,9 @@
     "schema:padoportal:batchCreateSchema": "npx hardhat run --network scroll-sepolia script/pado/createSchema.js",
     "deploy:all:scroll": "npx hardhat run --network scroll script/deploy/deployEverything.ts",
     "deploy:padoportal:scroll:createSchema": "npx hardhat run --network scroll script/pado/createSchema.js",
-    "deploy:padoportal:scroll:deployAndRegisterPadoPortal": "npx hardhat run --network scroll script/pado/deployAndRegisterPadoPortal.js"
-
-
+    "deploy:padoportal:scroll:deployAndRegisterPadoPortal": "npx hardhat run --network scroll script/pado/deployAndRegisterPadoPortal.js",
+    "upgrade:padoportal:scroll:upgradePadoPortal": "npx hardhat run --network scroll script/pado/upgradePadoPortal.js",
+    "test:padoportal:scroll": "npx hardhat run --network scroll script/pado/test.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
