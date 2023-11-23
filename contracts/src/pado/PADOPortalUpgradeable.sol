@@ -150,6 +150,11 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return _webSchemaId;
     }
 
+    function setModuleRegistry(address moduleRegistryAddr) public onlyOwner returns (bool) {
+        moduleRegistry = ModuleRegistry(moduleRegistryAddr);
+        return true;
+    }
+
     /**
      * @notice Return true if the user address have binance kyc attestations.
      */
@@ -165,8 +170,13 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
     }
 
-    // Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
+    // Return true if the user address have binance kyc Linea DeFi Voyage attestations.
     function checkDeFiVoyageHumanity(address userAddress) public view returns (bool) {
+        return checkDeFiVoyageBinanceKyc(userAddress);
+    }
+
+    // Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
+    function checkDeFiVoyageHumanityWithTwitter(address userAddress) public view returns (bool) {
         bytes32[] memory uids = _padoAttestations[userAddress][_webSchemaId];
         uint8 resultBinanceCount = 0;
         uint8 resultTwitterCount = 0;

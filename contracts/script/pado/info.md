@@ -73,3 +73,13 @@ Upgrading PadoPortal, with proxy at 0x1A58B9E0Aae7990466eA70d6791876EDcab67Ea7
 PadoPortal successfully upgraded!
 PadoPortal Proxy is at 0x1A58B9E0Aae7990466eA70d6791876EDcab67Ea7
 Implementation is at 0xb148825ab80c58D8786eBB5cbC8e4626085A6fB5
+
+
+## Linea Mainnet
+
+Deploying contracts with the account: 0xDB736B13E2f522dBE18B2015d0291E4b193D8eF6
+Deploying PADOPortalUpgradeable...
+Proxy is at 0xc4B7dCba12866f6f8181b949ca443232C4e94334
+Implementation is at 0x73E60b0f10A0fb31E1427F14426D4304aA95B87b
+adminAddress is at 0xD3729f1559B14a8050a56242285070c0399bD89c
+register PADOPortal address:0xc4B7dCba12866f6f8181b949ca443232C4e94334 success!
