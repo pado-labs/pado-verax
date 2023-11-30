@@ -9,10 +9,14 @@ npm install
 npm run build
 ```
 
-### Depoly
+### Depoly PADO Portal on Linea Goerli
 
 ```shell
+npm run deploy:padoportal:linea-goerli:deployAndRegisterPadoPortal
 ```
 
+### Depoly PADO Portal on Linea Mainnet
 
-
+```shell
+npm run deploy:padoportal:deployAndRegisterPadoPortal
+```
