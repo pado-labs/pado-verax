@@ -62,6 +62,7 @@
     "deploy:padoportal:deployAndRegisterPadoPortal": "npx hardhat run --network linea script/pado/deployAndRegisterPadoPortal.js",
     "upgrade:padoportal:upgradePadoPortal": "npx hardhat run --network linea script/pado/upgradePadoPortal.js",
     "test:padoportal:linea-goerli": "npx hardhat run --network linea-goerli script/pado/test.js",
+    "test:padoportal": "npx hardhat run --network linea script/pado/test.js",
     "schema:padoportal:batchCreateSchema": "npx hardhat run --network scroll-sepolia script/pado/createSchema.js",
     "deploy:all:scroll": "npx hardhat run --network scroll script/deploy/deployEverything.ts",
     "deploy:padoportal:scroll:createSchema": "npx hardhat run --network scroll script/pado/createSchema.js",
