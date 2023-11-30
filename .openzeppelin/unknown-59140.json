@@ -1,0 +1,245 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0xD68AB071776Db52D84ea87b587CE51C9D8cFeE8f",
+    "txHash": "0xf8806cefa39dbb806c4991ed1b078ecf7ed390f7dd99033b002fb387c459edc3"
+  },
+  "proxies": [],
+  "impls": {
+    "e88d582bcea50d108ae8e859efe97297acc7a389756cc34a4ec41b14179d781a": {
+      "address": "0x620e84546d71A775A82491e1e527292e94a7165A",
+      "txHash": "0x207946c91d057cca5a07938ffdcdcb28a642c5a22283b89c283e9abbe40f5131",
+      "layout": {
+        "solcVersion": "0.8.21",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "_hashedName",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol:40",
+            "renamedFrom": "_HASHED_NAME"
+          },
+          {
+            "label": "_hashedVersion",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bytes32",
+            "contract": "EIP712Upgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol:42",
+            "renamedFrom": "_HASHED_VERSION"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_string_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol:44"
+          },
+          {
+            "label": "_version",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_string_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol:45"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_array(t_uint256)48_storage",
+            "contract": "EIP712Upgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol:204"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "53",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_modules",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:46"
+          },
+          {
+            "label": "moduleRegistry",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_contract(ModuleRegistry)1414",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:47"
+          },
+          {
+            "label": "attestationRegistry",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_contract(AttestationRegistry)1010",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:48"
+          },
+          {
+            "label": "router",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_contract(IRouter)3994",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:49"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_string_storage",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:55"
+          },
+          {
+            "label": "_fee",
+            "offset": 0,
+            "slot": "158",
+            "type": "t_uint256",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:56"
+          },
+          {
+            "label": "_receiveAddr",
+            "offset": 0,
+            "slot": "159",
+            "type": "t_address_payable",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:57"
+          },
+          {
+            "label": "_padoAttestations",
+            "offset": 0,
+            "slot": "160",
+            "type": "t_mapping(t_address,t_mapping(t_bytes32,t_array(t_bytes32)dyn_storage))",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:58"
+          },
+          {
+            "label": "_webSchemaId",
+            "offset": 0,
+            "slot": "161",
+            "type": "t_bytes32",
+            "contract": "PADOPortalUpgradeable",
+            "src": "contracts/src/pado/PADOPortalUpgradeable.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)48_storage": {
+            "label": "uint256[48]",
+            "numberOfBytes": "1536"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(AttestationRegistry)1010": {
+            "label": "contract AttestationRegistry",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IRouter)3994": {
+            "label": "contract IRouter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ModuleRegistry)1414": {
+            "label": "contract ModuleRegistry",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_mapping(t_bytes32,t_array(t_bytes32)dyn_storage))": {
+            "label": "mapping(address => mapping(bytes32 => bytes32[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_array(t_bytes32)dyn_storage)": {
+            "label": "mapping(bytes32 => bytes32[])",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {}
+      }
+    }
+  }
+}

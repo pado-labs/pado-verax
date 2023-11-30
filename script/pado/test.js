@@ -9,8 +9,8 @@ async function main() {
 
     //const padoContractAddress = "0x8A047d2FbcEC425D7A28de7bce3630f38eC497c6"; // scroll sepolia testnet
     //const padoContractAddress = "0x1A58B9E0Aae7990466eA70d6791876EDcab67Ea7"; // scroll mainnet
-    //const padoContractAddress = "0x515b9dd670176e68b9623926d12082d6f37786f4"; // linea goerli testnet
-    const padoContractAddress = "0xc4B7dCba12866f6f8181b949ca443232C4e94334"; // linea mainnet
+    const padoContractAddress = "0x515b9dd670176e68b9623926d12082d6f37786f4"; // linea goerli testnet
+    //const padoContractAddress = "0xc4B7dCba12866f6f8181b949ca443232C4e94334"; // linea mainnet
     const padoContract = await hre.ethers.getContractAt("PADOPortalUpgradeable", padoContractAddress);
     const userAddress = "0xDB736B13E2f522dBE18B2015d0291E4b193D8eF6";
     const schemaId = "0x84FDF5748D9AF166503472FF5DEB0CD5F61F006169424805FD5554356AC6DF10";

@@ -42,7 +42,7 @@ const config: HardhatUserConfig = {
     },
   },
   paths: {
-    sources: "./src",
+    sources: "./contracts",
   },
   etherscan: {
     apiKey: {
