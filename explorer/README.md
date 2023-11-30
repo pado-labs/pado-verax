@@ -1,1 +1,0 @@
-# Verax Attestation Registry - Explorer
