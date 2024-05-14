@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.21;
 
-import { EIP712Upgradeable } from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol";
-import { ECDSAUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/ECDSAUpgradeable.sol";
-import { OwnableUpgradeable } from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
-import { IERC165 } from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
-import { IPortal } from "../interface/IPortal.sol";
-import { AttestationPayload, Attestation } from "../types/Structs.sol";
-import { ModuleRegistry } from "../ModuleRegistry.sol";
-import { AttestationRegistry } from "../AttestationRegistry.sol";
-import { IRouter } from "../interface/IRouter.sol";
+import {EIP712Upgradeable} from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/EIP712Upgradeable.sol";
+import {ECDSAUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/utils/cryptography/ECDSAUpgradeable.sol";
+import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {IERC165} from "openzeppelin-contracts/contracts/utils/introspection/ERC165.sol";
+import {IPortal} from "../interface/IPortal.sol";
+import {AttestationPayload, Attestation} from "../types/Structs.sol";
+import {ModuleRegistry} from "../ModuleRegistry.sol";
+import {AttestationRegistry} from "../AttestationRegistry.sol";
+import {IRouter} from "../interface/IRouter.sol";
 
 contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable {
     struct AttestationRequestData {
@@ -49,7 +49,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     IRouter public router;
     uint64 constant NO_EXPIRATION_TIME = 0;
     string public constant VERSION = "0.1";
-    // keccak256("Attest(bytes32 schema,address recipient,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data,uint64 deadline)").
+// keccak256("Attest(bytes32 schema,address recipient,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data,uint64 deadline)").
     bytes32 private constant ATTEST_PROXY_TYPEHASH = 0x4120d3b28306666b714826ad7cb70744d9658ad3e6cd873411bedadcf55afda7;
 
     string private _name;
@@ -58,13 +58,13 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     mapping(address => mapping(bytes32 schemaid => bytes32[])) private _padoAttestations;
     bytes32 private _webSchemaId;
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
+/// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(string memory name, uint256 feeParams, address payable recvAddr, 
-    address[] memory modules, address routerParam, bytes32 webSchemaId) external initializer {
+    function initialize(string memory name, uint256 feeParams, address payable recvAddr,
+        address[] memory modules, address routerParam, bytes32 webSchemaId) external initializer {
         __EIP712_init(name, VERSION);
         __Ownable_init();
         _name = name;
@@ -82,7 +82,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
 
         if (_fee > 0) {
             require(msg.value >= _fee, 'less than fee');
-            (bool success, ) = _receiveAddr.call{value: msg.value}(new bytes(0));
+            (bool success,) = _receiveAddr.call{value: msg.value}(new bytes(0));
             require(success, 'transfer failed');
         }
 
@@ -96,7 +96,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
 
         if (_fee > 0) {
             require(msg.value >= _fee * attestationsRequests.length, 'less than fee');
-            (bool success, ) = _receiveAddr.call{value: msg.value}(new bytes(0));
+            (bool success,) = _receiveAddr.call{value: msg.value}(new bytes(0));
             require(success, 'transfer failed');
         }
 
@@ -105,10 +105,25 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         }
     }
 
+    function revokeAttestation(bytes32 attestationId) external payable {
+        if (msg.sender != owner()) {
+            revert AccessDenied();
+        }
+        attestationRegistry.revoke(attestationId);
+    }
+
+    function bulkRevokeAttestation(bytes32[] memory attestationIds) external payable {
+        if (msg.sender != owner()) {
+            revert AccessDenied();
+        }
+        attestationRegistry.bulkRevoke(attestationIds);
+    }
+
+
     function supportsInterface(bytes4 interfaceID) public pure virtual override returns (bool) {
         return
-        interfaceID == type(IPortal).interfaceId ||
-        interfaceID == type(IERC165).interfaceId;
+            interfaceID == type(IPortal).interfaceId ||
+            interfaceID == type(IERC165).interfaceId;
     }
 
     function getModules() external view override returns (address[] memory) {
@@ -123,7 +138,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return _name;
     }
 
-    function fee() public view returns(uint256) {
+    function fee() public view returns (uint256) {
         return _fee;
     }
 
@@ -132,7 +147,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return true;
     }
 
-    function receiveAddr() public view returns(address) {
+    function receiveAddr() public view returns (address) {
         return _receiveAddr;
     }
 
@@ -146,7 +161,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return true;
     }
 
-    function getWebSchemaId() public view returns(bytes32) {
+    function getWebSchemaId() public view returns (bytes32) {
         return _webSchemaId;
     }
 
@@ -155,9 +170,9 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return true;
     }
 
-    /**
-     * @notice Return true if the user address have binance kyc attestations.
-     */
+/**
+* @notice Return true if the user address have binance kyc attestations.
+*/
     function checkBinanceKyc(address userAddress) public view returns (bool) {
         return checkCommon(userAddress, "Identity", "binance", "KYC Level", ">=2");
     }
@@ -170,19 +185,19 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return checkCommon(userAddress, "Identity", "x", "Account Ownership", "Verified");
     }
 
-    // Return true if the user address have binance kyc Linea DeFi Voyage attestations.
+// Return true if the user address have binance kyc Linea DeFi Voyage attestations.
     function checkDeFiVoyageHumanity(address userAddress) public view returns (bool) {
         return checkDeFiVoyageBinanceKyc(userAddress);
     }
 
-    // Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
+// Return true if the user address have both binance kyc and twitter owner Linea DeFi Voyage attestations.
     function checkDeFiVoyageHumanityWithTwitter(address userAddress) public view returns (bool) {
         bytes32[] memory uids = _padoAttestations[userAddress][_webSchemaId];
         uint8 resultBinanceCount = 0;
         uint8 resultTwitterCount = 0;
         for (uint256 i = 0; i < uids.length; i++) {
             Attestation memory ats = attestationRegistry.getAttestation(uids[i]);
-            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string,string,string,string,bytes32,bool,uint64,bytes32));
+            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string, string, string, string, bytes32, bool, uint64, bytes32));
             if (_compareStrings(ProofType, "Identity") && _compareStrings(Source, "binance")
             && _compareStrings(Content, "KYC Level(DeFiVoyage)") && _compareStrings(Condition, ">=2") && Result) {
                 resultBinanceCount++;
@@ -219,10 +234,10 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
     }
 
     function checkCommon(address userAddress, string memory proofType, string memory source, string memory content, string memory condition) public view returns (bool) {
-        bytes32[] memory attestationIds =  _padoAttestations[userAddress][_webSchemaId];
+        bytes32[] memory attestationIds = _padoAttestations[userAddress][_webSchemaId];
         for (uint256 i = 0; i < attestationIds.length; i++) {
             Attestation memory ats = attestationRegistry.getAttestation(attestationIds[i]);
-            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string,string,string,string,bytes32,bool,uint64,bytes32));
+            (string memory ProofType,string memory Source,string memory Content,string memory Condition,/*bytes32 SourceUserIdHash*/,bool Result,/*uint64 Timestamp*/,/*bytes32 UserIdHash*/) = abi.decode(ats.attestationData, (string, string, string, string, bytes32, bool, uint64, bytes32));
             if (_compareStrings(ProofType, proofType) && _compareStrings(Source, source)
             && _compareStrings(Content, content) && _compareStrings(Condition, condition) && Result) {
                 return true;
@@ -231,7 +246,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         return false;
     }
 
-    function getPadoAttestations(address user, bytes32 schema) external view returns(bytes32[] memory) {
+    function getPadoAttestations(address user, bytes32 schema) external view returns (bytes32[] memory) {
         return _padoAttestations[user][schema];
     }
 
@@ -263,7 +278,7 @@ contract PADOPortalUpgradeable is IPortal, EIP712Upgradeable, OwnableUpgradeable
         AttestationRequestData memory data = request.data;
         EIP712Signature memory signature = request.signature;
 
-        //_verifyUnusedSignature(signature);
+//_verifyUnusedSignature(signature);
 
         bytes32 digest = _hashTypedDataV4(
             keccak256(

@@ -18,10 +18,10 @@ async function main() {
     );
     //schema registry
     const contract = await hre.ethers.getContractAt("SchemaRegistry",
-        '0xB2c4Da1f8F08A0CA25862509E5431289BE2b598B'
+        '0x7B9410e815C65f291dC69741A504DBA790797D43'
     );
     try {
-        let schema = await contract.getSchema("0x84FDF5748D9AF166503472FF5DEB0CD5F61F006169424805FD5554356AC6DF10");
+        let schema = await contract.getSchema("0x79730da3d78a0c132ba782e2285a27d61f55d48ed698e37c06c399b75d8f836d");
         console.log(schema)
     } catch (er) {
         if (er.data && contract) {
